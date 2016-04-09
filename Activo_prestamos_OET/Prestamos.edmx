@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="Prestamos.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="PrestamosTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Prestamos" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="PrestamosContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PrestamoSet" EntityType="Prestamos.Prestamo" />
+          <EntitySet Name="Equipo_SolicitadoSet" EntityType="Prestamos.Equipo_Solicitado" />
+          <AssociationSet Name="PrestamoEquipo_Solicitado" Association="Prestamos.PrestamoEquipo_Solicitado">
+            <End Role="Prestamo" EntitySet="PrestamoSet" />
+            <End Role="Equipo_Solicitado" EntitySet="Equipo_SolicitadoSet" />
+          </AssociationSet>
+          <EntitySet Name="Equipo_AprobadoSet" EntityType="Prestamos.Equipo_Aprobado" />
+          <AssociationSet Name="PrestamoEquipo_Aprobado" Association="Prestamos.PrestamoEquipo_Aprobado">
+            <End Role="Prestamo" EntitySet="PrestamoSet" />
+            <End Role="Equipo_Aprobado" EntitySet="Equipo_AprobadoSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Prestamo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroBoleta" Type="Int32" Nullable="false" />
+          <Property Name="Motivo" Type="String" Nullable="false" />
+          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
+          <Property Name="FechaRetiro" Type="DateTime" Nullable="false" />
+          <Property Name="PeriodoUso" Type="Int32" Nullable="false" />
+          <Property Name="SoftwareReq" Type="String" Nullable="false" />
+          <Property Name="ObservacionesSolicitante" Type="String" Nullable="false" />
+          <Property Name="ObservacionesAprobado" Type="String" Nullable="false" />
+          <Property Name="ObservacionesRecibido" Type="String" Nullable="false" />
+          <Property Name="CedulaEmp" Type="Int32" Nullable="false" />
+          <Property Name="SiglaCurso" Type="String" Nullable="false" />
+          <Property Name="CedulaAdm" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Equipo_Solicitado" Relationship="Prestamos.PrestamoEquipo_Solicitado" FromRole="Prestamo" ToRole="Equipo_Solicitado" />
+          <NavigationProperty Name="Equipo_Aprobado" Relationship="Prestamos.PrestamoEquipo_Aprobado" FromRole="Prestamo" ToRole="Equipo_Aprobado" />
+        </EntityType>
+        <EntityType Name="Equipo_Solicitado">
+          <Key>
+            <PropertyRef Name="PrestamoId" />
+          </Key>
+          <Property Name="tipoActivo" Type="String" Nullable="false" />
+          <Property Name="cantidad" Type="String" Nullable="false" />
+          <NavigationProperty Name="Prestamo" Relationship="Prestamos.PrestamoEquipo_Solicitado" FromRole="Equipo_Solicitado" ToRole="Prestamo" />
+          <Property Name="PrestamoId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="PrestamoEquipo_Solicitado">
+          <End Type="Prestamos.Prestamo" Role="Prestamo" Multiplicity="1" />
+          <End Type="Prestamos.Equipo_Solicitado" Role="Equipo_Solicitado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prestamo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipo_Solicitado">
+              <PropertyRef Name="PrestamoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Equipo_Aprobado">
+          <Key>
+            <PropertyRef Name="Sigla_Activo" />
+            <PropertyRef Name="PrestamoId" />
+          </Key>
+          <Property Name="Sigla_Activo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Estado" Type="String" Nullable="false" />
+          <NavigationProperty Name="Prestamo" Relationship="Prestamos.PrestamoEquipo_Aprobado" FromRole="Equipo_Aprobado" ToRole="Prestamo" />
+          <Property Name="PrestamoId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="PrestamoEquipo_Aprobado">
+          <End Type="Prestamos.Prestamo" Role="Prestamo" Multiplicity="1" />
+          <End Type="Prestamos.Equipo_Aprobado" Role="Equipo_Aprobado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prestamo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Equipo_Aprobado">
+              <PropertyRef Name="PrestamoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Prestamos" />
+        <Alias Key="Target" Value="Prestamos.Store" />
+        <EntityContainerMapping CdmEntityContainer="PrestamosContainer" StorageEntityContainer="PrestamosTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
